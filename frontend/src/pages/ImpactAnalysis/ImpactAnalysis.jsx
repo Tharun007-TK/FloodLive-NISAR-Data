@@ -3,497 +3,317 @@ import {
   Building2,
   Home,
   Wheat,
-  Building,
   Download,
-  Search,
-  Filter,
   AlertTriangle,
+  RefreshCw,
   FileSpreadsheet,
   FileCode,
-  ShieldCheck,
-  CheckCircle2
+  Info
 } from 'lucide-react';
-import StatCard from '../../components/common/StatCard';
-import DisclaimerBanner from '../../components/common/DisclaimerBanner';
-import Badge from '../../components/common/Badge';
-import EmptyState from '../../components/common/EmptyState';
-import VillageTable from '../../components/analytics/VillageTable';
-import DistrictTable from '../../components/analytics/DistrictTable';
-import FilterBar from '../../components/analytics/FilterBar';
-import {
-  getFloodExtent,
-  getDistrictBoundaries,
-  getVillages,
-  getCroplandExposure,
-  computeImpactStatistics
-} from '../../services/dataService';
-import { exportToCSV, exportToJSON } from '../../services/reportService';
-
-const TABS = [
-  { id: 'districts', label: 'District Inundation', icon: Building2 },
-  { id: 'villages', label: 'Settlement Exposure', icon: Home },
-  { id: 'agriculture', label: 'Agricultural Overlap', icon: Wheat },
-  { id: 'buildings', label: 'Building Footprints', icon: Building },
-];
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { useLocationContext } from '../../context/LocationContext';
+import { getJobImpact, getJobFloodExtent } from '../../services/dataService';
 
 export default function ImpactAnalysis() {
-  const [activeTab, setActiveTab] = useState('districts');
-  const [stats, setStats] = useState(null);
+  const { activeEvent, activeJobId } = useLocationContext();
+  const [impactData, setImpactData] = useState(null);
+  const [floodGeoJSON, setFloodGeoJSON] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('districts');
 
-  // Filters for villages
-  const [villageSearch, setVillageSearch] = useState('');
-  const [severityFilter, setSeverityFilter] = useState('ALL');
-  const [districtFilter, setDistrictFilter] = useState('ALL');
+  const loadData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [impact, flood] = await Promise.all([
+        getJobImpact(activeJobId),
+        getJobFloodExtent(activeJobId)
+      ]);
+      setImpactData(impact);
+      setFloodGeoJSON(flood);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch impact analytics from backend.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    Promise.all([
-      getFloodExtent(),
-      getDistrictBoundaries(),
-      getVillages(),
-      getCroplandExposure()
-    ]).then(([flood, districts, villages, cropland]) => {
-      if (!isMounted) return;
-      const computed = computeImpactStatistics({
-        floodGeoJSON: flood?.geojson || null,
-        districtsGeoJSON: districts?.geojson || null,
-        villagesGeoJSON: villages?.geojson || null,
-        croplandGeoJSON: cropland?.geojson || null
-      });
-      setStats(computed);
-      setLoading(false);
-    }).catch(err => {
-      console.error('Failed to load impact analytics data', err);
-      if (isMounted) setLoading(false);
-    });
+    loadData();
+  }, [activeJobId]);
 
-    return () => { isMounted = false; };
-  }, []);
+  // Export handlers
+  const exportCSV = () => {
+    if (!impactData) return;
+    const rows = [
+      ['District', 'Flooded Area (km²)', 'Total Area (km²)', 'Percent Affected (%)', 'Severity', 'Modelled Population', 'Vulnerability Tier'],
+      ...impactData.districtBreakdown.map(d => [
+        d.district,
+        d.floodedAreaKm2,
+        d.totalAreaKm2,
+        d.percentAffected,
+        d.severity,
+        d.population,
+        d.vulnerabilityTier
+      ])
+    ];
+    const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(e => e.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `NISAR_Assam_Flood_Impact_${activeJobId}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-  const hasData = stats && stats.hasData;
+  const exportGeoJSON = () => {
+    if (!floodGeoJSON) return;
+    const blob = new Blob([JSON.stringify(floodGeoJSON, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `NISAR_Assam_Flood_Extent_${activeJobId}.geojson`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-  // Filtered villages
-  const filteredVillages = (stats?.exposedVillages || []).filter(v => {
-    if (severityFilter !== 'ALL' && (v.severity || '').toUpperCase() !== severityFilter) return false;
-    if (districtFilter !== 'ALL' && v.district !== districtFilter) return false;
-    if (villageSearch.trim().length > 0) {
-      const q = villageSearch.toLowerCase().trim();
-      return v.name.toLowerCase().includes(q) || v.district.toLowerCase().includes(q);
-    }
-    return true;
-  });
+  if (error) {
+    return (
+      <div style={{ padding: 'var(--space-6)', maxWidth: '800px', margin: '40px auto' }}>
+        <div style={{ padding: 'var(--space-4)', backgroundColor: 'var(--status-critical-bg)', border: '1px solid var(--status-critical)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
+          <AlertTriangle color="var(--status-critical)" size={20} />
+          <div>
+            <div style={{ fontWeight: 600, color: 'var(--status-critical)' }}>Failed to load impact analytics</div>
+            <div style={{ fontSize: 'var(--text-xs)', marginTop: '4px', color: 'var(--text-primary)' }}>{error}</div>
+            <button
+              onClick={loadData}
+              style={{ marginTop: 'var(--space-3)', display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', fontSize: 'var(--text-xs)', fontWeight: 600, backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-medium)', borderRadius: 'var(--radius-xs)', cursor: 'pointer' }}
+            >
+              <RefreshCw size={12} /> Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  // Extract unique district names for dropdown
-  const uniqueDistricts = Array.from(new Set((stats?.exposedVillages || []).map(v => v.district))).sort();
+  const chartData = impactData?.districtBreakdown.map(d => ({
+    name: d.district.replace(' (Guwahati)', '').replace(' (Tezpur)', ''),
+    floodedKm2: d.floodedAreaKm2,
+    percent: d.percentAffected
+  })) || [];
 
   return (
-    <div style={{
-      padding: '20px 24px 40px',
-      background: '#080D18',
-      minHeight: '100%',
-      color: '#F2F6FC',
-      fontFamily: 'Inter, sans-serif'
-    }}>
-      <DisclaimerBanner message="GEOSPATIAL IMPACT ANALYSIS — ASSESSING ADMINISTRATIVE, HUMAN SETTLEMENT & AGRICULTURAL EXPOSURE BASED ON LOADED NISAR OBSERVATIONS" />
-
+    <div style={{ padding: 'var(--space-4)', maxWidth: '1280px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Page Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        margin: '16px 0 20px',
-        flexWrap: 'wrap',
-        gap: 12
-      }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: 'var(--space-3)' }}>
         <div>
-          <h1 style={{
-            fontSize: 22,
-            fontWeight: 700,
-            fontFamily: 'Space Grotesk, sans-serif',
-            margin: 0,
-            letterSpacing: '-0.02em',
-          }}>
-            GEOSPATIAL IMPACT & EXPOSURE ASSESSMENT
+          <h1 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-primary)' }}>
+            Multi-Sector Impact Analytics
           </h1>
-          <p style={{ fontSize: 13, color: '#8B9AAF', margin: '4px 0 0 0' }}>
-            Multi-sector exposure metrics derived from classified radar inundation masks overlaid on territorial assets.
+          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: '2px' }}>
+            Zonal statistics derived from NISAR L2 GCOV Track 91, Frame 75 over Central Assam.
           </p>
         </div>
 
-        {/* Global Export Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
           <button
-            onClick={() => exportToCSV(stats?.districtBreakdown || [], 'floodmap_district_impact.csv')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              background: '#141F30',
-              border: '1px solid rgba(0, 213, 255, 0.25)',
-              color: '#F2F6FC',
-              padding: '8px 14px',
-              borderRadius: 6,
-              cursor: 'pointer',
-              fontSize: 12,
-              fontWeight: 600,
-            }}
+            onClick={exportCSV}
+            disabled={!impactData}
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: '5px 10px', fontSize: 'var(--text-xs)', fontWeight: 600, backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-medium)', borderRadius: 'var(--radius-xs)', color: 'var(--text-primary)', cursor: 'pointer' }}
           >
-            <FileSpreadsheet size={14} color="#00D5FF" />
-            Export Districts (CSV)
+            <FileSpreadsheet size={13} /> Export CSV
           </button>
-
           <button
-            onClick={() => exportToJSON(stats || {}, 'floodmap_full_impact_analysis.json')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              background: '#141F30',
-              border: '1px solid rgba(0, 213, 255, 0.25)',
-              color: '#F2F6FC',
-              padding: '8px 14px',
-              borderRadius: 6,
-              cursor: 'pointer',
-              fontSize: 12,
-              fontWeight: 600,
-            }}
+            onClick={exportGeoJSON}
+            disabled={!floodGeoJSON}
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', padding: '5px 10px', fontSize: 'var(--text-xs)', fontWeight: 600, backgroundColor: 'var(--accent-blue-subtle)', border: '1px solid var(--accent-blue-border)', borderRadius: 'var(--radius-xs)', color: 'var(--accent-blue)', cursor: 'pointer' }}
           >
-            <FileCode size={14} color="#35D39A" />
-            Export Full Model (JSON)
+            <FileCode size={13} /> Export GeoJSON
           </button>
         </div>
       </div>
 
-      {/* Summary KPI Cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: 14,
-        marginBottom: 20
-      }}>
-        <StatCard
-          icon={Building2}
-          label="Inundated Districts"
-          value={hasData ? stats.affectedDistrictsCount : 0}
-          unit="districts"
-          subtitle="Administrative territories"
-          color="#FF5252"
-        />
-        <StatCard
-          icon={Home}
-          label="Exposed Settlements"
-          value={hasData ? stats.exposedVillagesCount : 0}
-          unit="villages"
-          subtitle="Directly in flood zone"
-          color="#FFB547"
-        />
-        <StatCard
-          icon={Wheat}
-          label="Inundated Cropland"
-          value={hasData ? stats.totalAgriculturalFloodedKm2.toLocaleString() : 0}
-          unit="km²"
-          subtitle="High crop loss vulnerability"
-          color="#35D39A"
-        />
-        <StatCard
-          icon={Building}
-          label="Building Exposure Data"
-          value="Pending"
-          unit="layer"
-          subtitle="Footprint data unindexed"
-          color="#8B9AAF"
-        />
-      </div>
-
-      {/* Tabs */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        borderBottom: '1px solid rgba(0, 213, 255, 0.15)',
-        marginBottom: 16
-      }}>
-        {TABS.map(tab => {
-          const Icon = tab.icon;
-          const active = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 18px',
-                background: active ? '#141F30' : 'transparent',
-                border: 'none',
-                borderBottom: active ? '2px solid #00D5FF' : '2px solid transparent',
-                color: active ? '#00D5FF' : '#8B9AAF',
-                cursor: 'pointer',
-                fontSize: 13,
-                fontWeight: 600,
-                fontFamily: 'Inter, sans-serif'
-              }}
-            >
-              <Icon size={15} />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* TAB 1: District Inundation */}
-      {activeTab === 'districts' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: 12,
-            color: '#8B9AAF'
-          }}>
-            <span>Districts sorted by total inundated area descending. Click column headers to reorder.</span>
-            <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-              TOTAL INUNDATED: {stats?.totalFloodedAreaKm2 || 0} km²
-            </span>
+      {/* KPI Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-3)' }}>
+        <div style={{ padding: 'var(--space-3)', backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Inundated Area</div>
+          <div className="tabular-nums font-mono" style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--accent-blue)', marginTop: '2px' }}>
+            {impactData ? `${impactData.totalFloodedAreaKm2.toLocaleString()} km²` : '...'}
           </div>
-
-          <DistrictTable data={stats?.districtBreakdown || []} />
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>Measured in EPSG:6933 Equal-Area</div>
         </div>
-      )}
 
-      {/* TAB 2: Settlement Exposure */}
-      {activeTab === 'villages' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Filters Bar */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            background: '#141F30',
-            padding: '12px 14px',
-            borderRadius: 8,
-            border: '1px solid rgba(0, 213, 255, 0.15)',
-            flexWrap: 'wrap',
-            gap: 12
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 240 }}>
-              <Search size={15} color="#00D5FF" />
-              <input
-                type="text"
-                placeholder="Search village or district name..."
-                value={villageSearch}
-                onChange={(e) => setVillageSearch(e.target.value)}
-                style={{
-                  background: '#0D1524',
-                  border: '1px solid rgba(0, 213, 255, 0.2)',
-                  borderRadius: 6,
-                  padding: '6px 12px',
-                  color: '#F2F6FC',
-                  fontSize: 12,
-                  outline: 'none',
-                  width: '100%',
-                  maxWidth: 320
-                }}
+        <div style={{ padding: 'var(--space-3)', backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Flooded Vegetation</div>
+          <div className="tabular-nums font-mono" style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--status-success)', marginTop: '2px' }}>
+            {impactData ? `${impactData.floodedVegetationAreaKm2.toLocaleString()} km²` : '...'}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>L-band Double-Bounce Reflection</div>
+        </div>
+
+        <div style={{ padding: 'var(--space-3)', backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Exposed Population</div>
+          <div className="tabular-nums font-mono" style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--status-warning)', marginTop: '2px' }}>
+            {impactData ? impactData.totalModelledExposedPopulation.toLocaleString() : '...'}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--status-warning)', marginTop: '2px', fontWeight: 500 }}>Modelled estimate</div>
+        </div>
+
+        <div style={{ padding: 'var(--space-3)', backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
+          <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Inundated Cropland</div>
+          <div className="tabular-nums font-mono" style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+            {impactData ? `${impactData.totalAgriculturalFloodedKm2.toLocaleString()} km²` : '...'}
+          </div>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>ESA WorldCover Class 40</div>
+        </div>
+      </div>
+
+      {/* Chart: District Flooded Area */}
+      <div style={{ padding: 'var(--space-3)', backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)' }}>
+        <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>
+          Flooded Area by District (km²)
+        </div>
+        <div style={{ width: '100%', height: 180 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+              <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+              <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} unit=" km²" />
+              <Tooltip
+                contentStyle={{ backgroundColor: 'var(--surface-panel)', borderColor: 'var(--border-medium)', fontSize: '12px', borderRadius: '4px' }}
+                formatter={(value) => [`${value} km²`, 'Flooded Area']}
               />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {/* Severity filter */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#8B9AAF' }}>
-                <Filter size={13} />
-                <span>Severity:</span>
-                <select
-                  value={severityFilter}
-                  onChange={(e) => setSeverityFilter(e.target.value)}
-                  style={{
-                    background: '#0D1524',
-                    border: '1px solid rgba(0, 213, 255, 0.2)',
-                    color: '#F2F6FC',
-                    padding: '6px 10px',
-                    borderRadius: 6,
-                    fontSize: 12,
-                    outline: 'none'
-                  }}
-                >
-                  <option value="ALL">All Severities</option>
-                  <option value="CRITICAL">Critical</option>
-                  <option value="HIGH">High</option>
-                  <option value="MODERATE">Moderate</option>
-                  <option value="LOW">Low</option>
-                </select>
-              </div>
-
-              {/* District filter */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#8B9AAF' }}>
-                <span>District:</span>
-                <select
-                  value={districtFilter}
-                  onChange={(e) => setDistrictFilter(e.target.value)}
-                  style={{
-                    background: '#0D1524',
-                    border: '1px solid rgba(0, 213, 255, 0.2)',
-                    color: '#F2F6FC',
-                    padding: '6px 10px',
-                    borderRadius: 6,
-                    fontSize: 12,
-                    outline: 'none'
-                  }}
-                >
-                  <option value="ALL">All Districts ({uniqueDistricts.length})</option>
-                  {uniqueDistricts.map(d => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                onClick={() => exportToCSV(filteredVillages, 'floodmap_villages_exposure.csv')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  background: '#00D5FF',
-                  border: 'none',
-                  color: '#080D18',
-                  padding: '6px 12px',
-                  borderRadius: 6,
-                  cursor: 'pointer',
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              >
-                <Download size={13} /> Export CSV
-              </button>
-            </div>
-          </div>
-
-          <VillageTable data={filteredVillages} />
+              <Bar dataKey="floodedKm2" fill="var(--accent-blue)" radius={[2, 2, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-      )}
+      </div>
 
-      {/* TAB 3: Agricultural Overlap */}
-      {activeTab === 'agriculture' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{
-            background: '#141F30',
-            border: '1px solid rgba(0, 213, 255, 0.15)',
-            borderRadius: 8,
-            padding: 16
-          }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, margin: '0 0 8px 0', color: '#F2F6FC' }}>
-              Cropland Inundation Overlap by Agricultural Zone
-            </h3>
-            <p style={{ fontSize: 12, color: '#8B9AAF', margin: '0 0 16px 0' }}>
-              Calculated by intersecting classified SAR surface water polygons with ICAR / Copernicus agricultural land-use layers.
-            </p>
+      {/* Tabs & Table */}
+      <div style={{ backgroundColor: 'var(--surface-panel)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--surface-subtle)' }}>
+          <button
+            onClick={() => setActiveTab('districts')}
+            style={{ padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-xs)', fontWeight: 600, border: 'none', borderBottom: activeTab === 'districts' ? '2px solid var(--accent-blue)' : '2px solid transparent', backgroundColor: 'transparent', color: activeTab === 'districts' ? 'var(--accent-blue)' : 'var(--text-secondary)', cursor: 'pointer' }}
+          >
+            District Inundation Breakdown
+          </button>
+          <button
+            onClick={() => setActiveTab('settlements')}
+            style={{ padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-xs)', fontWeight: 600, border: 'none', borderBottom: activeTab === 'settlements' ? '2px solid var(--accent-blue)' : '2px solid transparent', backgroundColor: 'transparent', color: activeTab === 'settlements' ? 'var(--accent-blue)' : 'var(--text-secondary)', cursor: 'pointer' }}
+          >
+            Exposed Settlement Points
+          </button>
+          <button
+            onClick={() => setActiveTab('agriculture')}
+            style={{ padding: 'var(--space-2) var(--space-4)', fontSize: 'var(--text-xs)', fontWeight: 600, border: 'none', borderBottom: activeTab === 'agriculture' ? '2px solid var(--accent-blue)' : '2px solid transparent', backgroundColor: 'transparent', color: activeTab === 'agriculture' ? 'var(--accent-blue)' : 'var(--text-secondary)', cursor: 'pointer' }}
+          >
+            Agricultural Cropland Exposure
+          </button>
+        </div>
 
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                textAlign: 'left',
-                fontSize: 12
-              }}>
-                <thead>
-                  <tr style={{
-                    background: '#101827',
-                    borderBottom: '1px solid rgba(0, 213, 255, 0.2)',
-                    color: '#8B9AAF',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 11
-                  }}>
-                    <th style={{ padding: '10px 14px' }}>ZONE ID</th>
-                    <th style={{ padding: '10px 14px' }}>DISTRICT</th>
-                    <th style={{ padding: '10px 14px' }}>AGRICULTURAL BASIN</th>
-                    <th style={{ padding: '10px 14px' }}>TOTAL CROPLAND (KM²)</th>
-                    <th style={{ padding: '10px 14px' }}>INUNDATED CROPLAND (KM²)</th>
-                    <th style={{ padding: '10px 14px' }}>PRIMARY CROPS</th>
-                    <th style={{ padding: '10px 14px' }}>GROWTH STAGE</th>
+        {/* Tab 1: Districts Table */}
+        {activeTab === 'districts' && (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 'var(--text-xs)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--surface-subtle)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>District</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Flooded Area (km²)</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>District Total (km²)</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Percent Inundated</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Modelled Exposed Pop.</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Vulnerability Tier</th>
+                </tr>
+              </thead>
+              <tbody>
+                {impactData?.districtBreakdown.map((row) => (
+                  <tr key={row.district} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', fontWeight: 600, color: 'var(--text-primary)' }}>{row.district}</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--accent-blue)', fontWeight: 600 }}>{row.floodedAreaKm2.toFixed(2)} km²</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-secondary)' }}>{row.totalAreaKm2.toFixed(1)} km²</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-primary)' }}>{row.percentAffected.toFixed(2)}%</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                      {row.population.toLocaleString()} <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>(modelled estimate)</span>
+                    </td>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                      <span className={row.vulnerabilityTier === 'CRITICAL' ? 'badge-status-critical' : row.vulnerabilityTier === 'HIGH' ? 'badge-status-high' : 'badge-status-moderate'}>
+                        {row.vulnerabilityTier}
+                      </span>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {(stats?.agriculturalBreakdown || []).map(a => (
-                    <tr
-                      key={a.id}
-                      style={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                        transition: 'background 0.1s ease',
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0, 213, 255, 0.05)'}
-                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                    >
-                      <td style={{ padding: '10px 14px', fontFamily: "'IBM Plex Mono', monospace", color: '#00D5FF' }}>
-                        {a.id}
-                      </td>
-                      <td style={{ padding: '10px 14px', fontWeight: 600, color: '#F2F6FC' }}>
-                        {a.district}
-                      </td>
-                      <td style={{ padding: '10px 14px', color: '#CBD5E1' }}>
-                        {a.zone}
-                      </td>
-                      <td style={{ padding: '10px 14px', color: '#8B9AAF', fontFamily: "'IBM Plex Mono', monospace" }}>
-                        {a.totalCroplandKm2} km²
-                      </td>
-                      <td style={{ padding: '10px 14px', color: '#FF5252', fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
-                        {a.affectedCroplandKm2} km²
-                      </td>
-                      <td style={{ padding: '10px 14px', color: '#35D39A' }}>
-                        {a.primaryCrops.join(', ')}
-                      </td>
-                      <td style={{ padding: '10px 14px', color: '#8B9AAF' }}>
-                        {a.growthStage}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* TAB 4: Building Footprints (Scientific Empty State) */}
-      {activeTab === 'buildings' && (
-        <div style={{
-          background: '#141F30',
-          border: '1px solid rgba(255, 181, 71, 0.3)',
-          borderRadius: 8,
-          padding: '32px 24px',
-          textAlign: 'center',
-          maxWidth: 720,
-          margin: '20px auto'
-        }}>
-          <AlertTriangle size={36} color="#FFB547" style={{ marginBottom: 12 }} />
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#F2F6FC', margin: '0 0 8px 0' }}>
-            Building Footprint Dataset Not Indexed
-          </h2>
-          <p style={{ fontSize: 13, color: '#8B9AAF', lineHeight: 1.6, margin: '0 0 20px 0' }}>
-            Building exposure analysis requires high-resolution structural vector footprints (such as OpenStreetMap building polygons or Microsoft Global ML Building Footprints) intersecting with detected flood extents. In accordance with our scientific transparency principles, no artificial building count is generated.
-          </p>
-
-          <div style={{
-            background: '#0D1524',
-            border: '1px solid rgba(0, 213, 255, 0.15)',
-            borderRadius: 6,
-            padding: 16,
-            textAlign: 'left',
-            fontSize: 12,
-            fontFamily: "'IBM Plex Mono', monospace",
-            color: '#CBD5E1',
-            lineHeight: 1.7
-          }}>
-            <div style={{ color: '#00D5FF', fontWeight: 700, marginBottom: 4 }}>
-              To enable building structural exposure:
-            </div>
-            <div>1. Place GeoJSON building polygons into: <code>frontend/public/data/boundaries/buildings.geojson</code></div>
-            <div>2. Ensure properties contain <code>type</code>, <code>levels</code>, and <code>district</code></div>
-            <div>3. Execute dataset re-indexing: <code>npm run index-data</code></div>
-            <div>4. Refresh application to view building exposure breakdown</div>
+        {/* Tab 2: Settlements Table */}
+        {activeTab === 'settlements' && (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 'var(--text-xs)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--surface-subtle)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Settlement Name</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>District</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Coordinates (WGS84)</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Modelled Population</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Exposure Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {impactData?.exposedSettlements.map((s) => (
+                  <tr key={s.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', fontWeight: 600 }}>{s.name}</td>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-secondary)' }}>{s.district}</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-muted)' }}>{s.lat.toFixed(4)}° N, {s.lng.toFixed(4)}° E</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                      {s.estimatedPopulation.toLocaleString()} <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>(modelled estimate)</span>
+                    </td>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)' }}>
+                      <span className={s.severity === 'CRITICAL' ? 'badge-status-critical' : 'badge-status-high'}>
+                        {s.severity}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Tab 3: Agriculture Table */}
+        {activeTab === 'agriculture' && (
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 'var(--text-xs)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--surface-subtle)', color: 'var(--text-muted)' }}>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>District / Agro Zone</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Total Cropland (km²)</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Affected Cropland (km²)</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Primary Monsoon Crops</th>
+                  <th style={{ padding: 'var(--space-2) var(--space-3)' }}>Growth Phase</th>
+                </tr>
+              </thead>
+              <tbody>
+                {impactData?.agriculturalBreakdown.map((a) => (
+                  <tr key={a.id} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', fontWeight: 600 }}>{a.district}</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)' }}>{a.totalCroplandKm2.toFixed(1)} km²</td>
+                    <td className="tabular-nums font-mono" style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--status-critical)', fontWeight: 600 }}>{a.affectedCroplandKm2.toFixed(2)} km²</td>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-secondary)' }}>{a.primaryCrops.join(', ')}</td>
+                    <td style={{ padding: 'var(--space-2) var(--space-3)', color: 'var(--text-muted)' }}>{a.growthStage}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -7,13 +7,10 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { LocationProvider } from './context/LocationContext';
 
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
-const LiveMap = lazy(() => import('./pages/LiveMap/LiveMap'));
 const ImpactAnalysis = lazy(() => import('./pages/ImpactAnalysis/ImpactAnalysis'));
-const SatelliteData = lazy(() => import('./pages/SatelliteData/SatelliteData'));
-const BeforeAfter = lazy(() => import('./pages/BeforeAfter/BeforeAfter'));
-const DataSources = lazy(() => import('./pages/DataSources/DataSources'));
-const Reports = lazy(() => import('./pages/Reports/Reports'));
-const About = lazy(() => import('./pages/About/About'));
+const Observations = lazy(() => import('./pages/Observations/Observations'));
+const Method = lazy(() => import('./pages/Method/Method'));
+const Export = lazy(() => import('./pages/Export/Export'));
 
 function AppShell({ children }) {
   return (
@@ -21,7 +18,8 @@ function AppShell({ children }) {
       display: 'flex',
       height: '100vh',
       overflow: 'hidden',
-      background: '#080D18',
+      backgroundColor: 'var(--surface-bg)',
+      color: 'var(--text-primary)'
     }}>
       <Sidebar />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
@@ -43,14 +41,22 @@ export default function App() {
     <LocationProvider>
       <BrowserRouter>
         <Routes>
+          {/* 5 Core Analyst Views */}
           <Route path="/" element={<AppShell><Dashboard /></AppShell>} />
-          <Route path="/map" element={<AppShell><LiveMap /></AppShell>} />
           <Route path="/impact" element={<AppShell><ImpactAnalysis /></AppShell>} />
-          <Route path="/satellite" element={<AppShell><SatelliteData /></AppShell>} />
-          <Route path="/compare" element={<AppShell><BeforeAfter /></AppShell>} />
-          <Route path="/sources" element={<AppShell><DataSources /></AppShell>} />
-          <Route path="/reports" element={<AppShell><Reports /></AppShell>} />
-          <Route path="/about" element={<AppShell><About /></AppShell>} />
+          <Route path="/observations" element={<AppShell><Observations /></AppShell>} />
+          <Route path="/method" element={<AppShell><Method /></AppShell>} />
+          <Route path="/export" element={<AppShell><Export /></AppShell>} />
+
+          {/* Clean Aliases & Backward Compatibility Redirects */}
+          <Route path="/map" element={<Navigate to="/" replace />} />
+          <Route path="/compare" element={<Navigate to="/" replace />} />
+          <Route path="/satellite" element={<Navigate to="/observations" replace />} />
+          <Route path="/about" element={<Navigate to="/method" replace />} />
+          <Route path="/sources" element={<Navigate to="/method" replace />} />
+          <Route path="/reports" element={<Navigate to="/export" replace />} />
+
+          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

@@ -1,22 +1,22 @@
 /**
- * FloodMap Live — API Client & Integration Layer
- * 
- * Supports both standalone local dataset consumption and future backend server integration.
- * If VITE_API_BASE_URL is configured, requests will be routed to the backend microservice.
- * Otherwise, requests fall back to static datasets indexed in `public/data/manifest.json`.
+ * FloodMap Live — API Client & Communication Layer
+ * Connects exclusively to the FastAPI scientific backend microservice.
+ * ZERO silent fallbacks to local files: when the backend is offline or an endpoint fails,
+ * throws an explicit, actionable error to surface honest error states in the UI.
  */
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
-export const IS_BACKEND_CONFIGURED = Boolean(API_BASE_URL && API_BASE_URL.trim().length > 0);
+export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
 /**
- * Robust fetch with JSON parsing and standardized error handling
+ * Standard fetcher with timeout and explicit error handling
  */
 export async function fetchJson(endpoint, options = {}) {
-  const url = IS_BACKEND_CONFIGURED ? `${API_BASE_URL}${endpoint}` : endpoint;
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_BASE_URL}${cleanEndpoint}`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), options.timeout || 15000);
+  const timeoutMs = options.timeout || 12000;
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, {
@@ -24,6 +24,7 @@ export async function fetchJson(endpoint, options = {}) {
       signal: controller.signal,
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
         ...(options.headers || {})
       }
     });
@@ -31,74 +32,48 @@ export async function fetchJson(endpoint, options = {}) {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText} for ${url}`);
+      let detail = response.statusText;
+      try {
+        const errorJson = await response.json();
+        detail = errorJson.detail || errorJson.message || JSON.stringify(errorJson);
+      } catch {
+        // Fall back to text if json cannot be parsed
+      }
+      throw new Error(`API Error [HTTP ${response.status}]: ${detail}`);
     }
 
     return await response.json();
   } catch (error) {
     clearTimeout(timeoutId);
+
     if (error.name === 'AbortError') {
-      throw new Error(`Request timed out after ${options.timeout || 15000}ms for ${url}`);
+      throw new Error(`Backend request timed out after ${timeoutMs}ms (${url}).`);
     }
+
+    if (error.message && error.message.includes('Failed to fetch')) {
+      throw new Error(
+        `Backend service offline or unreachable at ${API_BASE_URL}. Ensure the FastAPI service is running on port 8000.`
+      );
+    }
+
     throw error;
   }
 }
 
 /**
- * Text fetcher for CSV or plain text formats
- */
-export async function fetchText(endpoint, options = {}) {
-  const url = IS_BACKEND_CONFIGURED ? `${API_BASE_URL}${endpoint}` : endpoint;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), options.timeout || 15000);
-
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText} for ${url}`);
-    }
-
-    return await response.text();
-  } catch (error) {
-    clearTimeout(timeoutId);
-    throw error;
-  }
-}
-
-/**
- * Check backend connection status
+ * Health check endpoint
  */
 export async function checkBackendHealth() {
-  if (!IS_BACKEND_CONFIGURED) {
-    return {
-      connected: false,
-      configured: false,
-      message: 'No backend API configured. Running in client-side data discovery mode.'
-    };
-  }
-
   try {
-    const health = await fetchJson('/api/v1/health', { timeout: 3000 });
+    const data = await fetchJson('/api/v1/health', { timeout: 3500 });
     return {
       connected: true,
-      configured: true,
-      status: health.status || 'OK',
-      version: health.version || '1.0.0',
-      message: 'Connected to FloodMap Live processing backend.'
+      data
     };
   } catch (err) {
     return {
       connected: false,
-      configured: true,
-      error: err.message,
-      message: `Configured backend at ${API_BASE_URL} is unreachable.`
+      error: err.message
     };
   }
 }

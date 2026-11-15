@@ -1,199 +1,153 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Satellite, Bell, Search, Compass, ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useWatchArea } from '../../context/LocationContext';
-
-function LiveClock() {
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const dateStr = now.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-  });
-
-  const timeStr = now.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  });
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        lineHeight: 1.2,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '13px',
-          fontWeight: 600,
-          color: '#F2F6FC',
-          letterSpacing: '0.06em',
-        }}
-      >
-        {timeStr}
-      </span>
-      <span
-        style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '10px',
-          color: '#8B9AAF',
-          letterSpacing: '0.04em',
-        }}
-      >
-        {dateStr} UTC
-      </span>
-    </div>
-  );
-}
+import { Radio, Sun, Moon, AlertTriangle, ShieldCheck, RefreshCw } from 'lucide-react';
+import { useLocationContext } from '../../context/LocationContext';
+import { checkBackendHealth } from '../../services/apiClient';
 
 export default function TopNav() {
-  const { watchArea } = useWatchArea();
-  const [bellHovered, setBellHovered] = useState(false);
+  const { theme, toggleTheme, activeEvent, setActiveEvent, verifiedEvents } = useLocationContext();
+  const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true });
+
+  const verifyHealth = async () => {
+    setBackendStatus(prev => ({ ...prev, checking: true }));
+    const health = await checkBackendHealth();
+    setBackendStatus({ connected: health.connected, checking: false, error: health.error });
+  };
+
+  useEffect(() => {
+    verifyHealth();
+    const interval = setInterval(verifyHealth, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header
       style={{
-        height: '56px',
-        minHeight: '56px',
-        background: '#101827',
-        borderBottom: '1px solid rgba(0, 213, 255, 0.12)',
+        height: '48px',
+        minHeight: '48px',
+        backgroundColor: 'var(--surface-panel)',
+        borderBottom: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 20px',
-        gap: '16px',
-        zIndex: 50,
+        justifyContent: 'space-between',
+        padding: '0 var(--space-4)',
+        zIndex: 'var(--z-topbar)',
+        userSelect: 'none'
       }}
     >
-      {/* Active Watch Area Badge */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          flexShrink: 0,
-        }}
-      >
-        <div style={{
-          width: 24,
-          height: 24,
-          borderRadius: '50%',
-          background: 'rgba(0, 213, 255, 0.15)',
-          border: '1px solid rgba(0, 213, 255, 0.35)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <MapPin
-            size={13}
-            color="#00D5FF"
-          />
-        </div>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 10, color: '#8B9AAF', fontFamily: "'IBM Plex Mono', monospace" }}>
-              ACTIVE WATCH AREA:
-            </span>
-            <span
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: '13px',
-                fontWeight: 600,
-                color: '#F2F6FC',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {watchArea.name}
-            </span>
-          </div>
-          <div style={{ fontSize: 10, color: '#00D5FF', fontFamily: "'IBM Plex Mono', monospace" }}>
-            {watchArea.lat.toFixed(4)}°N, {watchArea.lng.toFixed(4)}°E • Source: {watchArea.source?.toUpperCase()}
-          </div>
-        </div>
-      </div>
-
-      {/* Center Link to Map */}
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Link
-          to="/map"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            background: 'rgba(0, 213, 255, 0.08)',
-            border: '1px solid rgba(0, 213, 255, 0.25)',
-            color: '#00D5FF',
-            padding: '5px 12px',
-            borderRadius: 6,
-            fontSize: 11,
-            fontWeight: 600,
-            textDecoration: 'none',
-            fontFamily: "'IBM Plex Mono', monospace"
-          }}
-        >
-          <Compass size={13} />
-          <span>VIEW IN LIVE MAP</span>
-          <ExternalLink size={11} />
-        </Link>
-      </div>
-
-      {/* Right Section */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '14px',
-          flexShrink: 0,
-        }}
-      >
-        {/* SATELLITE STATUS badge */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            background: 'rgba(53, 211, 154, 0.1)',
-            border: '1px solid rgba(53, 211, 154, 0.25)',
-            borderRadius: '4px',
-            padding: '4px 8px',
-          }}
-        >
-          <Satellite size={12} color="#35D39A" />
-          <span
+      {/* Left: Product title & AOI Selector */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <div
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '11px',
-              fontWeight: 600,
-              color: '#35D39A',
-              letterSpacing: '0.05em',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: backendStatus.connected ? 'var(--status-success)' : 'var(--status-critical)'
             }}
-          >
-            NISAR ACTIVE
+          />
+          <span style={{ fontWeight: 700, fontSize: 'var(--text-base)', letterSpacing: '-0.01em' }}>
+            NISAR Flood Observatory
           </span>
         </div>
 
-        {/* Divider */}
-        <div
-          style={{
-            width: '1px',
-            height: '24px',
-            background: 'rgba(0, 213, 255, 0.08)',
-          }}
-        />
+        <div style={{ height: '16px', width: '1px', backgroundColor: 'var(--border-medium)' }} />
 
-        {/* Live Clock */}
-        <LiveClock />
+        {/* AOI Event Selector */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <label htmlFor="aoi-select" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Event:
+          </label>
+          <select
+            id="aoi-select"
+            value={activeEvent.id}
+            onChange={(e) => {
+              const selected = verifiedEvents.find(v => v.id === e.target.value);
+              if (selected) setActiveEvent(selected);
+            }}
+            style={{
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              padding: '2px 8px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-medium)',
+              backgroundColor: 'var(--surface-base)',
+              color: 'var(--text-primary)',
+              cursor: 'pointer'
+            }}
+          >
+            {verifiedEvents.map((evt) => (
+              <option key={evt.id} value={evt.id}>
+                {evt.name} — Track {evt.track}, Frame {evt.frame}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Pre / Post observation dates */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+          <span style={{ color: 'var(--text-muted)' }}>Baseline:</span>
+          <span className="font-mono" style={{ padding: '1px 4px', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-xs)' }}>
+            {activeEvent.preDate}
+          </span>
+          <span style={{ color: 'var(--text-muted)' }}>Overpass:</span>
+          <span className="font-mono" style={{ padding: '1px 4px', backgroundColor: 'var(--surface-subtle)', borderRadius: 'var(--radius-xs)', color: 'var(--accent-blue)', fontWeight: 600 }}>
+            {activeEvent.postDate}
+          </span>
+        </div>
+      </div>
+
+      {/* Right: Badges, Connectivity & Theme Toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        {/* Tier Badge */}
+        <span className="badge-provisional" title="Calibrated post-June 2026 science observation">
+          {activeEvent.tier}
+        </span>
+
+        {/* Validation State Badge */}
+        <span className="badge-unvalidated" title="No simultaneous ground truth radar mask available">
+          Not independently validated
+        </span>
+
+        {/* Backend Connectivity Status */}
+        <button
+          onClick={verifyHealth}
+          title={backendStatus.connected ? 'Backend service online' : `Backend offline: ${backendStatus.error || 'Connection refused'}`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-1)',
+            padding: '2px 6px',
+            fontSize: 'var(--text-xs)',
+            backgroundColor: 'transparent',
+            border: 'none',
+            color: backendStatus.connected ? 'var(--text-muted)' : 'var(--status-critical)',
+            cursor: 'pointer'
+          }}
+        >
+          <RefreshCw size={12} className={backendStatus.checking ? 'spin' : ''} />
+          <span>{backendStatus.connected ? 'API Online' : 'API Offline'}</span>
+        </button>
+
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          aria-label={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+          title={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '28px',
+            height: '28px',
+            borderRadius: 'var(--radius-sm)',
+            border: '1px solid var(--border-subtle)',
+            backgroundColor: 'var(--surface-subtle)',
+            color: 'var(--text-secondary)',
+            cursor: 'pointer'
+          }}
+        >
+          {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
+        </button>
       </div>
     </header>
   );

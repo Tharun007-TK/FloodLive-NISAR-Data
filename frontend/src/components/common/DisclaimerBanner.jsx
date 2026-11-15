@@ -1,37 +1,35 @@
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertCircle, Info } from 'lucide-react';
 
-export default function DisclaimerBanner({ style = {} }) {
+export default function DisclaimerBanner({ 
+  message = 'NISAR L2 GCOV (PROVISIONAL) • Calibrated science product • Not independently validated against ground truth or simultaneous radar',
+  severity = 'info',
+  style = {} 
+}) {
+  const isWarning = severity === 'warning';
+
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        background: 'rgba(255, 181, 71, 0.06)',
-        borderBottom: '1px solid rgba(255, 181, 71, 0.15)',
-        borderTop: '1px solid rgba(255, 181, 71, 0.15)',
-        padding: '7px 20px',
+        gap: 'var(--space-2)',
+        backgroundColor: isWarning ? 'var(--status-warning-subtle)' : 'var(--accent-blue-subtle)',
+        borderBottom: `1px solid ${isWarning ? 'var(--status-warning)' : 'var(--accent-blue-border)'}`,
+        padding: '6px var(--space-4)',
+        fontSize: 'var(--text-xs)',
+        color: isWarning ? 'var(--status-warning)' : 'var(--accent-blue)',
+        userSelect: 'none',
         ...style,
       }}
     >
-      <AlertTriangle
-        size={13}
-        color="#FFB547"
-        style={{ flexShrink: 0 }}
-      />
-      <span
-        style={{
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontSize: '11px',
-          fontWeight: 500,
-          color: '#FFB547',
-          letterSpacing: '0.08em',
-          opacity: 0.85,
-        }}
-      >
-        DEMONSTRATION DATA — NOT VERIFIED SATELLITE ANALYSIS
+      {isWarning ? (
+        <AlertCircle size={14} style={{ flexShrink: 0 }} />
+      ) : (
+        <Info size={14} style={{ flexShrink: 0 }} />
+      )}
+      <span style={{ fontWeight: 500, letterSpacing: '0.01em' }}>
+        {message}
       </span>
     </div>
   );

@@ -1,0 +1,198 @@
+{
+  "hasData": true,
+  "totalFloodedAreaKm2": 1106.92,
+  "floodedVegetationAreaKm2": 50.91,
+  "affectedDistrictsCount": 5,
+  "exposedSettlementsCount": 5,
+  "totalModelledExposedPopulation": 1647346,
+  "totalAgriculturalFloodedKm2": 1001.79,
+  "districtBreakdown": [
+    {
+      "district": "Morigaon",
+      "floodedAreaKm2": 442.62,
+      "totalAreaKm2": 1551.0,
+      "percentAffected": 28.54,
+      "severity": "CRITICAL",
+      "population": 335098,
+      "vulnerabilityTier": "CRITICAL"
+    },
+    {
+      "district": "Nagaon",
+      "floodedAreaKm2": 557.93,
+      "totalAreaKm2": 2287.0,
+      "percentAffected": 24.4,
+      "severity": "CRITICAL",
+      "population": 662392,
+      "vulnerabilityTier": "HIGH"
+    },
+    {
+      "district": "Kamrup (Guwahati)",
+      "floodedAreaKm2": 155.24,
+      "totalAreaKm2": 3105.0,
+      "percentAffected": 5.0,
+      "severity": "HIGH",
+      "population": 113815,
+      "vulnerabilityTier": "HIGH"
+    },
+    {
+      "district": "Darrang",
+      "floodedAreaKm2": 0.08,
+      "totalAreaKm2": 1585.0,
+      "percentAffected": 0.01,
+      "severity": "LOW",
+      "population": 139,
+      "vulnerabilityTier": "HIGH"
+    },
+    {
+      "district": "Sonitpur (Tezpur)",
+      "floodedAreaKm2": 385.35,
+      "totalAreaKm2": 2077.0,
+      "percentAffected": 18.55,
+      "severity": "CRITICAL",
+      "population": 535902,
+      "vulnerabilityTier": "MODERATE"
+    }
+  ],
+  "exposedSettlements": [
+    {
+      "id": "SET-01",
+      "name": "Bhuragaon",
+      "district": "Morigaon",
+      "estimatedPopulation": 14200,
+      "severity": "CRITICAL",
+      "lat": 26.2842,
+      "lng": 92.3411
+    },
+    {
+      "id": "SET-03",
+      "name": "Lahorighat",
+      "district": "Morigaon",
+      "estimatedPopulation": 18500,
+      "severity": "CRITICAL",
+      "lat": 26.3725,
+      "lng": 92.4518
+    },
+    {
+      "id": "SET-04",
+      "name": "Kaliabor",
+      "district": "Nagaon",
+      "estimatedPopulation": 22100,
+      "severity": "HIGH",
+      "lat": 26.521,
+      "lng": 92.985
+    },
+    {
+      "id": "SET-06",
+      "name": "Dhing",
+      "district": "Nagaon",
+      "estimatedPopulation": 19800,
+      "severity": "HIGH",
+      "lat": 26.467,
+      "lng": 92.482
+    },
+    {
+      "id": "SET-07",
+      "name": "Chandrapur",
+      "district": "Kamrup (Guwahati)",
+      "estimatedPopulation": 31200,
+      "severity": "HIGH",
+      "lat": 26.235,
+      "lng": 91.895
+    }
+  ],
+  "agriculturalBreakdown": [
+    {
+      "id": "AGRI-MOR",
+      "district": "Morigaon",
+      "zone": "Brahmaputra Alluvial Agro-Ecological Zone",
+      "totalCroplandKm2": 853.1,
+      "affectedCroplandKm2": 287.7,
+      "primaryCrops": [
+        "Winter Rice (Sali)",
+        "Autumn Rice (Ahu)",
+        "Jute",
+        "Mustard"
+      ],
+      "growthStage": "Monsoon Tillering / Vegetative Phase"
+    },
+    {
+      "id": "AGRI-NAG",
+      "district": "Nagaon",
+      "zone": "Brahmaputra Alluvial Agro-Ecological Zone",
+      "totalCroplandKm2": 1257.9,
+      "affectedCroplandKm2": 362.65,
+      "primaryCrops": [
+        "Sali Paddy",
+        "Sugarcane",
+        "Pulses",
+        "Vegetables"
+      ],
+      "growthStage": "Monsoon Tillering / Vegetative Phase"
+    },
+    {
+      "id": "AGRI-KAM",
+      "district": "Kamrup (Guwahati)",
+      "zone": "Brahmaputra Alluvial Agro-Ecological Zone",
+      "totalCroplandKm2": 1707.8,
+      "affectedCroplandKm2": 100.91,
+      "primaryCrops": [
+        "Paddy",
+        "Horticulture",
+        "Banana",
+        "Arecanut"
+      ],
+      "growthStage": "Monsoon Tillering / Vegetative Phase"
+    },
+    {
+      "id": "AGRI-DAR",
+      "district": "Darrang",
+      "zone": "Brahmaputra Alluvial Agro-Ecological Zone",
+      "totalCroplandKm2": 871.8,
+      "affectedCroplandKm2": 0.05,
+      "primaryCrops": [
+        "Rice",
+        "Jute",
+        "Vegetables",
+        "Mustard"
+      ],
+      "growthStage": "Monsoon Tillering / Vegetative Phase"
+    },
+    {
+      "id": "AGRI-SON",
+      "district": "Sonitpur (Tezpur)",
+      "zone": "Brahmaputra Alluvial Agro-Ecological Zone",
+      "totalCroplandKm2": 1142.4,
+      "affectedCroplandKm2": 250.48,
+      "primaryCrops": [
+        "Tea Estates",
+        "Sali Rice",
+        "Citrus",
+        "Pulses"
+      ],
+      "growthStage": "Monsoon Tillering / Vegetative Phase"
+    }
+  ],
+  "severityDistribution": {
+    "CRITICAL": 3,
+    "HIGH": 1,
+    "MODERATE": 0,
+    "LOW": 1
+  },
+  "observationMeta": {
+    "pre_granule_id": "NISAR_L2_PR_GCOV_024_091_D_075_4005_DHDH_A_20260702T123350_20260702T123424_P05023_N_F_J_001",
+    "post_granule_id": "NISAR_L2_PR_GCOV_026_091_D_075_4005_DHDH_A_20260726T123348_20260726T123423_P05023_N_F_J_001",
+    "track": 91,
+    "frame": 75,
+    "pass_direction": "DESCENDING",
+    "tier": "PROVISIONAL",
+    "polarizations": [
+      "HH",
+      "HV"
+    ],
+    "frequency": "L-band (1.25 GHz)"
+  },
+  "validationStatus": "Not independently validated",
+  "validationIoU": null,
+  "validationF1": null,
+  "disclaimer": "Population figures are modelled estimates based on gridded population densities overlaid on NISAR flood boundaries."
+}

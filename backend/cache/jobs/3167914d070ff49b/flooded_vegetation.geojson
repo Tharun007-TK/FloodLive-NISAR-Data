@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "name": "NISAR_Flooded_Vegetation_Double_Bounce_Track091_Frame075",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "properties": {
+    "job_id": "3167914d070ff49b",
+    "total_area_km2": 50.908,
+    "feature_count": 1,
+    "radar_mechanism": "L-band Sub-Canopy Double-Bounce Corner Reflection (+3.8 dB HH/HV Rise)"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Mayong / Pobitora Swamp Forest",
+        "area_km2": 50.908,
+        "area_ha": 5090.8,
+        "classification": "Flooded Vegetation (Double-Bounce)",
+        "delta_hh_db": 4.1,
+        "delta_hv_db": 3.6
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.02,
+              26.24
+            ],
+            [
+              92.09,
+              26.23
+            ],
+            [
+              92.12,
+              26.28
+            ],
+            [
+              92.06,
+              26.31
+            ],
+            [
+              92.02,
+              26.24
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

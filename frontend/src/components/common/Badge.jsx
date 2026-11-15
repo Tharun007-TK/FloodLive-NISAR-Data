@@ -1,26 +1,46 @@
 import React from 'react';
 
-const SEVERITY_STYLES = {
-  CRITICAL: { background: 'rgba(255, 82, 82, 0.15)', color: '#FF5252', border: '1px solid rgba(255, 82, 82, 0.3)' },
-  HIGH: { background: 'rgba(255, 181, 71, 0.15)', color: '#FFB547', border: '1px solid rgba(255, 181, 71, 0.3)' },
-  MODERATE: { background: 'rgba(67, 139, 255, 0.15)', color: '#438BFF', border: '1px solid rgba(67, 139, 255, 0.3)' },
-  LOW: { background: 'rgba(53, 211, 154, 0.15)', color: '#35D39A', border: '1px solid rgba(53, 211, 154, 0.3)' },
-  DEMO: { background: 'rgba(255, 181, 71, 0.1)', color: '#FFB547', border: '1px solid rgba(255, 181, 71, 0.2)' },
+const SEVERITY_TOKENS = {
+  CRITICAL: {
+    bg: 'var(--status-critical-subtle)',
+    color: 'var(--status-critical)',
+    border: 'var(--status-critical-border)'
+  },
+  HIGH: {
+    bg: 'var(--status-warning-subtle)',
+    color: 'var(--status-warning)',
+    border: 'var(--status-warning-border)'
+  },
+  MODERATE: {
+    bg: 'var(--accent-blue-subtle)',
+    color: 'var(--accent-blue)',
+    border: 'var(--accent-blue-border)'
+  },
+  LOW: {
+    bg: 'var(--status-success-subtle)',
+    color: 'var(--status-success)',
+    border: 'var(--status-success-border)'
+  }
 };
 
 export default function Badge({ severity = 'LOW', label, style = {} }) {
-  const s = SEVERITY_STYLES[severity] || SEVERITY_STYLES.LOW;
+  const norm = (severity || 'LOW').toUpperCase();
+  const token = SEVERITY_TOKENS[norm] || SEVERITY_TOKENS.LOW;
+
   return (
     <span
+      className="font-mono"
       style={{
-        ...s,
-        padding: '2px 8px',
-        borderRadius: '4px',
-        fontSize: '11px',
+        backgroundColor: token.bg,
+        color: token.color,
+        border: `1px solid ${token.border}`,
+        padding: '1px 6px',
+        borderRadius: 'var(--radius-xs)',
+        fontSize: '10px',
         fontWeight: 600,
-        letterSpacing: '0.05em',
-        fontFamily: "'IBM Plex Mono', monospace",
+        letterSpacing: '0.04em',
         display: 'inline-block',
+        textTransform: 'uppercase',
         ...style,
       }}
     >

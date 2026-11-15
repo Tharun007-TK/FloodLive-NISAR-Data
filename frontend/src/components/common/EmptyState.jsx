@@ -4,6 +4,7 @@ export default function EmptyState({
   icon: Icon,
   title = 'No data available',
   description = 'There is nothing to display here yet.',
+  action,
   style = {},
 }) {
   return (
@@ -13,54 +14,55 @@ export default function EmptyState({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '60px 24px',
+        padding: 'var(--space-8) var(--space-4)',
         textAlign: 'center',
-        gap: '16px',
+        gap: 'var(--space-3)',
         ...style,
       }}
     >
       {Icon && (
         <div
           style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '14px',
-            background: 'rgba(0, 213, 255, 0.05)',
-            border: '1px solid rgba(0, 213, 255, 0.1)',
+            width: '48px',
+            height: '48px',
+            borderRadius: 'var(--radius-md)',
+            backgroundColor: 'var(--surface-subtle)',
+            border: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginBottom: '4px',
           }}
         >
-          <Icon size={28} color="#8B9AAF" />
+          <Icon size={22} color="var(--text-muted)" />
         </div>
       )}
       <div>
         <div
           style={{
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontSize: '16px',
+            fontSize: 'var(--text-sm)',
             fontWeight: 600,
-            color: '#8B9AAF',
-            marginBottom: '8px',
+            color: 'var(--text-primary)',
+            marginBottom: '4px',
           }}
         >
           {title}
         </div>
         <div
           style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '13px',
-            color: '#8B9AAF',
-            opacity: 0.6,
-            maxWidth: '320px',
-            lineHeight: 1.6,
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-muted)',
+            maxWidth: '340px',
+            lineHeight: 1.5,
           }}
         >
           {description}
         </div>
       </div>
+      {action && (
+        <div style={{ marginTop: 'var(--space-2)' }}>
+          {action}
+        </div>
+      )}
     </div>
   );
 }
