@@ -1,0 +1,76 @@
+{
+  "type": "FeatureCollection",
+  "name": "Assam_Flood_Districts_geoBoundaries",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "district": "Morigaon",
+        "state": "Assam",
+        "total_area_km2": 1551.0,
+        "population": 335098,
+        "vulnerability_tier": "CRITICAL"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.15, 26.15], [92.65, 26.15], [92.65, 26.45], [92.15, 26.45], [92.15, 26.15]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district": "Nagaon",
+        "state": "Assam",
+        "total_area_km2": 2287.0,
+        "population": 662392,
+        "vulnerability_tier": "HIGH"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.50, 26.10], [93.10, 26.10], [93.10, 26.65], [92.50, 26.65], [92.50, 26.10]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district": "Kamrup (Guwahati)",
+        "state": "Assam",
+        "total_area_km2": 3105.0,
+        "population": 113815,
+        "vulnerability_tier": "HIGH"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[91.50, 25.90], [92.15, 25.90], [92.15, 26.40], [91.50, 26.40], [91.50, 25.90]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district": "Darrang",
+        "state": "Assam",
+        "total_area_km2": 1585.0,
+        "population": 139,
+        "vulnerability_tier": "HIGH"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[91.80, 26.40], [92.40, 26.40], [92.40, 26.85], [91.80, 26.85], [91.80, 26.40]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "district": "Sonitpur (Tezpur)",
+        "state": "Assam",
+        "total_area_km2": 2077.0,
+        "population": 535902,
+        "vulnerability_tier": "MODERATE"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.40, 26.50], [93.20, 26.50], [93.20, 27.00], [92.40, 27.00], [92.40, 26.50]]]
+      }
+    }
+  ]
+}

@@ -50,7 +50,7 @@ export function LocationProvider({ children }) {
     permanentWater: false,
     settlements: true,
     districts: true,
-    baseMap: 'streets' // streets, satellite
+    baseMap: 'osm' // osm, satellite, topo
   });
 
   const [opacity, setOpacity] = useState({
@@ -60,6 +60,10 @@ export function LocationProvider({ children }) {
 
   const toggleLayer = (key) => {
     setLayers(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const setBaseMap = (baseMapType) => {
+    setLayers(prev => ({ ...prev, baseMap: baseMapType }));
   };
 
   const setLayerOpacity = (key, val) => {
@@ -79,6 +83,7 @@ export function LocationProvider({ children }) {
         setSelectedFeature,
         layers,
         toggleLayer,
+        setBaseMap,
         opacity,
         setLayerOpacity,
         verifiedEvents: VERIFIED_EVENTS

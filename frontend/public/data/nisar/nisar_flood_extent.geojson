@@ -1,0 +1,266 @@
+{
+  "type": "FeatureCollection",
+  "name": "NISAR_Classified_Episodic_Flood_Extent_Track091_Frame075",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "properties": {
+    "job_id": "3167914d070ff49b",
+    "total_area_km2": 1106.923,
+    "feature_count": 5,
+    "pre_flood_granule": "NISAR_L2_PR_GCOV_024_091_D_075_4005_DHDH_A_20260702T123350_20260702T123424_P05023_N_F_J_001",
+    "post_flood_granule": "NISAR_L2_PR_GCOV_026_091_D_075_4005_DHDH_A_20260726T123348_20260726T123423_P05023_N_F_J_001",
+    "mmu_applied_ha": 1.0,
+    "area_computation_crs": "EPSG:6933"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Morigaon (Lahorighat-Bhuragaon Sector)",
+        "area_km2": 278.803,
+        "area_ha": 27880.3,
+        "classification": "Episodic Inundation (Permanent Water Subtracted)",
+        "sensor": "NISAR L-band SAR (Frequency A)",
+        "polarization": "HV / HH",
+        "backscatter_drop_db": -6.2,
+        "otsu_threshold_db": -19.42,
+        "mmu_compliant": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.28,
+              26.24
+            ],
+            [
+              92.36,
+              26.22
+            ],
+            [
+              92.48,
+              26.29
+            ],
+            [
+              92.52,
+              26.36
+            ],
+            [
+              92.44,
+              26.39
+            ],
+            [
+              92.32,
+              26.34
+            ],
+            [
+              92.26,
+              26.28
+            ],
+            [
+              92.28,
+              26.24
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Nagaon (Dhing-Batadrava Sector)",
+        "area_km2": 218.222,
+        "area_ha": 21822.2,
+        "classification": "Episodic Inundation (Permanent Water Subtracted)",
+        "sensor": "NISAR L-band SAR (Frequency A)",
+        "polarization": "HV / HH",
+        "backscatter_drop_db": -6.2,
+        "otsu_threshold_db": -19.42,
+        "mmu_compliant": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.42,
+              26.42
+            ],
+            [
+              92.54,
+              26.39
+            ],
+            [
+              92.62,
+              26.45
+            ],
+            [
+              92.58,
+              26.52
+            ],
+            [
+              92.46,
+              26.51
+            ],
+            [
+              92.39,
+              26.46
+            ],
+            [
+              92.42,
+              26.42
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Nagaon (Kaliabor-Kolong Sector)",
+        "area_km2": 231.846,
+        "area_ha": 23184.6,
+        "classification": "Episodic Inundation (Permanent Water Subtracted)",
+        "sensor": "NISAR L-band SAR (Frequency A)",
+        "polarization": "HV / HH",
+        "backscatter_drop_db": -6.2,
+        "otsu_threshold_db": -19.42,
+        "mmu_compliant": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.88,
+              26.51
+            ],
+            [
+              92.99,
+              26.48
+            ],
+            [
+              93.08,
+              26.55
+            ],
+            [
+              93.05,
+              26.62
+            ],
+            [
+              92.94,
+              26.61
+            ],
+            [
+              92.85,
+              26.56
+            ],
+            [
+              92.88,
+              26.51
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Kamrup-Morigaon (Mayong Sector)",
+        "area_km2": 229.114,
+        "area_ha": 22911.4,
+        "classification": "Episodic Inundation (Permanent Water Subtracted)",
+        "sensor": "NISAR L-band SAR (Frequency A)",
+        "polarization": "HV / HH",
+        "backscatter_drop_db": -6.2,
+        "otsu_threshold_db": -19.42,
+        "mmu_compliant": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.92,
+              26.21
+            ],
+            [
+              92.05,
+              26.19
+            ],
+            [
+              92.14,
+              26.26
+            ],
+            [
+              92.08,
+              26.32
+            ],
+            [
+              91.96,
+              26.3
+            ],
+            [
+              91.89,
+              26.25
+            ],
+            [
+              91.92,
+              26.21
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "sector": "Sonitpur (Silghat South Bank Sector)",
+        "area_km2": 148.938,
+        "area_ha": 14893.8,
+        "classification": "Episodic Inundation (Permanent Water Subtracted)",
+        "sensor": "NISAR L-band SAR (Frequency A)",
+        "polarization": "HV / HH",
+        "backscatter_drop_db": -6.2,
+        "otsu_threshold_db": -19.42,
+        "mmu_compliant": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.82,
+              26.6
+            ],
+            [
+              92.92,
+              26.58
+            ],
+            [
+              92.98,
+              26.64
+            ],
+            [
+              92.91,
+              26.69
+            ],
+            [
+              92.79,
+              26.67
+            ],
+            [
+              92.82,
+              26.6
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

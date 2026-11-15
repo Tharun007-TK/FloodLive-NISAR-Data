@@ -1,0 +1,76 @@
+{
+  "type": "FeatureCollection",
+  "name": "Assam_Exposed_Settlements",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SET-01",
+        "name": "Bhuragaon",
+        "district": "Morigaon",
+        "estimatedPopulation": 14200,
+        "severity": "CRITICAL"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.3411, 26.2842]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SET-03",
+        "name": "Lahorighat",
+        "district": "Morigaon",
+        "estimatedPopulation": 18500,
+        "severity": "CRITICAL"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.4518, 26.3725]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SET-04",
+        "name": "Kaliabor",
+        "district": "Nagaon",
+        "estimatedPopulation": 22100,
+        "severity": "HIGH"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.985, 26.521]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SET-06",
+        "name": "Dhing",
+        "district": "Nagaon",
+        "estimatedPopulation": 19800,
+        "severity": "HIGH"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [92.482, 26.467]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SET-07",
+        "name": "Chandrapur",
+        "district": "Kamrup (Guwahati)",
+        "estimatedPopulation": 31200,
+        "severity": "HIGH"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [91.895, 26.235]
+      }
+    }
+  ]
+}

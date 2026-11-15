@@ -68,17 +68,20 @@ export default function FloodMap({
   center = [26.35, 92.45],
   zoom = 9
 }) {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  // Base map provider selection (OpenStreetMap & Esri)
+  let baseMapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  let baseMapAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-  const baseMapUrl = layers.baseMap === 'satellite'
-    ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-    : isDark
-    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-    : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
-
-  const baseMapAttr = layers.baseMap === 'satellite'
-    ? '&copy; Esri, Maxar, Earthstar Geographics'
-    : '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+  if (layers.baseMap === 'satellite') {
+    baseMapUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+    baseMapAttr = '&copy; Esri, Maxar, Earthstar Geographics';
+  } else if (layers.baseMap === 'topo') {
+    baseMapUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}';
+    baseMapAttr = '&copy; Esri, DeLorme, USGS, NPS';
+  } else if (isDark) {
+    baseMapUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+    baseMapAttr = '&copy; Esri, HERE, Garmin, METI/NASA, USGS';
+  }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>

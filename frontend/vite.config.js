@@ -14,5 +14,5 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-  envPrefix: ['VITE_', 'CARTO_'],
+  envPrefix: ['VITE_'],
 })

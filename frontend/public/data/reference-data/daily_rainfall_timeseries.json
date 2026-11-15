@@ -1,0 +1,24 @@
+{
+  "dataset": "NASA GPM IMERG Final Precipitation Daily 0.1° (GPM_3IMERGDF)",
+  "spatial_coverage": "Central Assam Floodplain (90.25°E - 93.44°E, 25.4°N - 28.1°N)",
+  "source": "NASA Goddard Earth Sciences Data and Information Services Center (GES DISC)",
+  "unit": "mm/day",
+  "data": [
+    {"date": "2026-07-15", "rainfall_mm": 18.2, "status": "Normal"},
+    {"date": "2026-07-16", "rainfall_mm": 24.5, "status": "Moderate"},
+    {"date": "2026-07-17", "rainfall_mm": 42.1, "status": "Heavy"},
+    {"date": "2026-07-18", "rainfall_mm": 78.4, "status": "Very Heavy"},
+    {"date": "2026-07-19", "rainfall_mm": 112.6, "status": "Torrential Downpour (Flood Onset)"},
+    {"date": "2026-07-20", "rainfall_mm": 94.3, "status": "Very Heavy"},
+    {"date": "2026-07-21", "rainfall_mm": 86.7, "status": "Very Heavy"},
+    {"date": "2026-07-22", "rainfall_mm": 138.2, "status": "Extremely Heavy Deluge"},
+    {"date": "2026-07-23", "rainfall_mm": 125.4, "status": "Extremely Heavy Deluge"},
+    {"date": "2026-07-24", "rainfall_mm": 91.0, "status": "Very Heavy"},
+    {"date": "2026-07-25", "rainfall_mm": 67.8, "status": "Heavy"},
+    {"date": "2026-07-26", "rainfall_mm": 48.3, "status": "Moderate (NISAR Post-Flood Overpass)"},
+    {"date": "2026-07-27", "rainfall_mm": 35.1, "status": "Moderate"},
+    {"date": "2026-07-28", "rainfall_mm": 22.0, "status": "Moderate"},
+    {"date": "2026-07-29", "rainfall_mm": 14.2, "status": "Normal"},
+    {"date": "2026-07-30", "rainfall_mm": 8.5, "status": "Normal"}
+  ]
+}

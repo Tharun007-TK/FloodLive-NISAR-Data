@@ -3,7 +3,7 @@ import { Layers, Sliders, Eye, EyeOff, Map as MapIcon, Info } from 'lucide-react
 import { useLocationContext } from '../../context/LocationContext';
 
 export default function LeftRail() {
-  const { layers, toggleLayer, opacity, setLayerOpacity } = useLocationContext();
+  const { layers, toggleLayer, setBaseMap, opacity, setLayerOpacity } = useLocationContext();
 
   return (
     <div
@@ -92,32 +92,32 @@ export default function LeftRail() {
           </label>
         </div>
 
-        {/* Base Map Selector */}
+        {/* Base Map Selector (OpenStreetMap & Esri) */}
         <div style={{ paddingTop: 'var(--space-2)', borderTop: '1px solid var(--border-subtle)' }}>
           <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: 'var(--space-1)', textTransform: 'uppercase' }}>
             Base Layer
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-1)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-1)' }}>
             <button
-              onClick={() => toggleLayer('baseMap')}
+              onClick={() => setBaseMap('osm')}
               style={{
-                padding: '3px 6px',
-                fontSize: 'var(--text-xs)',
+                padding: '3px 4px',
+                fontSize: '11px',
                 borderRadius: 'var(--radius-xs)',
                 border: '1px solid',
-                borderColor: layers.baseMap === 'streets' ? 'var(--accent-blue-border)' : 'var(--border-subtle)',
-                backgroundColor: layers.baseMap === 'streets' ? 'var(--accent-blue-subtle)' : 'transparent',
-                color: layers.baseMap === 'streets' ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                borderColor: layers.baseMap === 'osm' || layers.baseMap === 'streets' ? 'var(--accent-blue-border)' : 'var(--border-subtle)',
+                backgroundColor: layers.baseMap === 'osm' || layers.baseMap === 'streets' ? 'var(--accent-blue-subtle)' : 'transparent',
+                color: layers.baseMap === 'osm' || layers.baseMap === 'streets' ? 'var(--accent-blue)' : 'var(--text-secondary)',
                 cursor: 'pointer'
               }}
             >
-              Carto Positron
+              OSM
             </button>
             <button
-              onClick={() => toggleLayer('baseMap')}
+              onClick={() => setBaseMap('satellite')}
               style={{
-                padding: '3px 6px',
-                fontSize: 'var(--text-xs)',
+                padding: '3px 4px',
+                fontSize: '11px',
                 borderRadius: 'var(--radius-xs)',
                 border: '1px solid',
                 borderColor: layers.baseMap === 'satellite' ? 'var(--accent-blue-border)' : 'var(--border-subtle)',
@@ -127,6 +127,21 @@ export default function LeftRail() {
               }}
             >
               Satellite
+            </button>
+            <button
+              onClick={() => setBaseMap('topo')}
+              style={{
+                padding: '3px 4px',
+                fontSize: '11px',
+                borderRadius: 'var(--radius-xs)',
+                border: '1px solid',
+                borderColor: layers.baseMap === 'topo' ? 'var(--accent-blue-border)' : 'var(--border-subtle)',
+                backgroundColor: layers.baseMap === 'topo' ? 'var(--accent-blue-subtle)' : 'transparent',
+                color: layers.baseMap === 'topo' ? 'var(--accent-blue)' : 'var(--text-secondary)',
+                cursor: 'pointer'
+              }}
+            >
+              Topo
             </button>
           </div>
         </div>
