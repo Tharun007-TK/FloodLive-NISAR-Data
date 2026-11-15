@@ -1,0 +1,202 @@
+{
+  "type": "FeatureCollection",
+  "name": "Flood_Prone_Villages_Assam",
+  "properties": {
+    "disclaimer": "Reference settlement point locations for exposure analysis",
+    "region": "Assam Floodplain"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-001",
+        "name": "Garamur",
+        "district": "Majuli",
+        "population": 7450,
+        "elevation_m": 85,
+        "primary_livelihood": "Agriculture / Pottery"
+      },
+      "geometry": { "type": "Point", "coordinates": [94.152, 26.963] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-002",
+        "name": "Kamalabari",
+        "district": "Majuli",
+        "population": 9120,
+        "elevation_m": 82,
+        "primary_livelihood": "Agriculture / Weaving"
+      },
+      "geometry": { "type": "Point", "coordinates": [94.184, 26.932] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-003",
+        "name": "Barpeta Road",
+        "district": "Barpeta",
+        "population": 35200,
+        "elevation_m": 48,
+        "primary_livelihood": "Trade / Paddy Cultivation"
+      },
+      "geometry": { "type": "Point", "coordinates": [90.965, 26.512] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-004",
+        "name": "Howly",
+        "district": "Barpeta",
+        "population": 18400,
+        "elevation_m": 46,
+        "primary_livelihood": "Agriculture / Jute"
+      },
+      "geometry": { "type": "Point", "coordinates": [91.025, 26.435] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-005",
+        "name": "Jagiroad",
+        "district": "Morigaon",
+        "population": 22100,
+        "elevation_m": 54,
+        "primary_livelihood": "Paper Industry / Agriculture"
+      },
+      "geometry": { "type": "Point", "coordinates": [92.215, 26.218] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-006",
+        "name": "Bhuragaon",
+        "district": "Morigaon",
+        "population": 14200,
+        "elevation_m": 50,
+        "primary_livelihood": "Paddy / Fishery"
+      },
+      "geometry": { "type": "Point", "coordinates": [92.420, 26.385] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-007",
+        "name": "Kampur",
+        "district": "Nagaon",
+        "population": 16800,
+        "elevation_m": 62,
+        "primary_livelihood": "Paddy / Mustard"
+      },
+      "geometry": { "type": "Point", "coordinates": [92.812, 26.155] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-008",
+        "name": "Dhing",
+        "district": "Nagaon",
+        "population": 19400,
+        "elevation_m": 58,
+        "primary_livelihood": "Jute / Rice"
+      },
+      "geometry": { "type": "Point", "coordinates": [92.478, 26.465] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-009",
+        "name": "Dhakuakhana",
+        "district": "Lakhimpur",
+        "population": 12800,
+        "elevation_m": 95,
+        "primary_livelihood": "Muga Silk / Rice"
+      },
+      "geometry": { "type": "Point", "coordinates": [94.442, 27.245] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-010",
+        "name": "Bihpuria",
+        "district": "Lakhimpur",
+        "population": 15600,
+        "elevation_m": 92,
+        "primary_livelihood": "Agriculture / Tea"
+      },
+      "geometry": { "type": "Point", "coordinates": [93.925, 27.032] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-011",
+        "name": "Silapathar",
+        "district": "Dhemaji",
+        "population": 25800,
+        "elevation_m": 105,
+        "primary_livelihood": "Trade / Agriculture"
+      },
+      "geometry": { "type": "Point", "coordinates": [94.725, 27.592] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-012",
+        "name": "Jonai",
+        "district": "Dhemaji",
+        "population": 18200,
+        "elevation_m": 120,
+        "primary_livelihood": "Agriculture / Timber"
+      },
+      "geometry": { "type": "Point", "coordinates": [94.885, 27.712] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-013",
+        "name": "Gauripur",
+        "district": "Dhubri",
+        "population": 28400,
+        "elevation_m": 35,
+        "primary_livelihood": "Jute / Trade"
+      },
+      "geometry": { "type": "Point", "coordinates": [90.024, 26.082] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-014",
+        "name": "Bilasipara",
+        "district": "Dhubri",
+        "population": 36100,
+        "elevation_m": 38,
+        "primary_livelihood": "Agriculture / Fishing"
+      },
+      "geometry": { "type": "Point", "coordinates": [90.235, 26.231] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-015",
+        "name": "Hajo",
+        "district": "Kamrup Rural",
+        "population": 29800,
+        "elevation_m": 52,
+        "primary_livelihood": "Bell-metal / Paddy"
+      },
+      "geometry": { "type": "Point", "coordinates": [91.524, 26.248] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "VIL-016",
+        "name": "Rangia",
+        "district": "Kamrup Rural",
+        "population": 27400,
+        "elevation_m": 58,
+        "primary_livelihood": "Railway Hub / Agriculture"
+      },
+      "geometry": { "type": "Point", "coordinates": [91.625, 26.435] }
+    }
+  ]
+}

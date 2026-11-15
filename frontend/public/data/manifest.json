@@ -1,0 +1,309 @@
+{
+  "generatedAt": "2026-11-15T05:56:26.550Z",
+  "generator": "FloodMap Live Data Indexer v1.0",
+  "dataDir": "/data",
+  "formatVersion": "1.0.0",
+  "summary": {
+    "totalDatasets": 9,
+    "byCategory": {
+      "nisar": 3,
+      "boundaries": 3,
+      "permanentWater": 1,
+      "agriculture": 1,
+      "referenceData": 1
+    },
+    "byFormat": {
+      "GEOJSON": 7,
+      "JSON": 1,
+      "CSV": 1
+    }
+  },
+  "datasets": [
+    {
+      "id": "nisar_20240610_preflood_extent",
+      "filename": "nisar_20240610_preflood_extent.geojson",
+      "path": "/data/nisar/nisar_20240610_preflood_extent.geojson",
+      "category": "nisar",
+      "format": "GEOJSON",
+      "fileSizeBytes": 2854,
+      "lastModified": "2026-11-15T05:37:55.235Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 4,
+      "bbox": [
+        90.9,
+        26.2,
+        94.28,
+        27.32
+      ],
+      "observationDate": "2024-06-10",
+      "satellite": "NISAR",
+      "polarization": [
+        "VV",
+        "VH"
+      ],
+      "coverage": "Brahmaputra Floodplain, Assam",
+      "description": null,
+      "disclaimer": "Reference pre-flood baseline observation for change detection and before/after comparison",
+      "propertyKeys": [
+        "id",
+        "district",
+        "severity",
+        "flooded_area_km2",
+        "flood_type",
+        "classification"
+      ]
+    },
+    {
+      "id": "nisar_20240708_flood_extent",
+      "filename": "nisar_20240708_flood_extent.geojson",
+      "path": "/data/nisar/nisar_20240708_flood_extent.geojson",
+      "category": "nisar",
+      "format": "GEOJSON",
+      "fileSizeBytes": 5852,
+      "lastModified": "2026-11-15T05:37:49.948Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 8,
+      "bbox": [
+        89.82,
+        25.98,
+        94.92,
+        27.72
+      ],
+      "observationDate": "2024-07-08",
+      "satellite": "NISAR",
+      "polarization": [
+        "VV",
+        "VH"
+      ],
+      "coverage": "Brahmaputra Floodplain, Assam",
+      "description": null,
+      "disclaimer": "Reference NISAR L2 classified flood extent dataset for NASA Space Apps 2026",
+      "propertyKeys": [
+        "id",
+        "district",
+        "severity",
+        "flooded_area_km2",
+        "flood_type",
+        "mean_backscatter_db",
+        "classification",
+        "depth_est_m"
+      ]
+    },
+    {
+      "id": "nisar_observations_catalog",
+      "filename": "nisar_observations_catalog.json",
+      "path": "/data/nisar/nisar_observations_catalog.json",
+      "category": "nisar",
+      "format": "JSON",
+      "fileSizeBytes": 3405,
+      "lastModified": "2026-11-15T05:38:02.038Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "itemCount": 4,
+      "propertyKeys": [
+        "id",
+        "satellite",
+        "mission",
+        "agency",
+        "acquisitionDate",
+        "acquisitionTime",
+        "passDirection",
+        "polarization",
+        "incidenceAngle",
+        "resolution",
+        "swathWidth",
+        "frequency",
+        "processingLevel",
+        "status",
+        "coverage",
+        "dataAvailability",
+        "datasetPath",
+        "qualityScore",
+        "cloudCover",
+        "notes"
+      ]
+    },
+    {
+      "id": "districts",
+      "filename": "districts.geojson",
+      "path": "/data/boundaries/districts.geojson",
+      "category": "boundaries",
+      "format": "GEOJSON",
+      "fileSizeBytes": 4806,
+      "lastModified": "2026-11-15T05:36:56.226Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 8,
+      "bbox": [
+        89.8,
+        25.95,
+        94.95,
+        27.75
+      ],
+      "observationDate": null,
+      "satellite": null,
+      "polarization": null,
+      "coverage": "Assam, India",
+      "description": null,
+      "disclaimer": "Reference administrative district boundaries for geospatial impact assessment",
+      "propertyKeys": [
+        "id",
+        "district",
+        "headquarters",
+        "total_area_km2",
+        "population",
+        "cropland_area_km2",
+        "vulnerability_tier"
+      ]
+    },
+    {
+      "id": "study_area",
+      "filename": "study_area.geojson",
+      "path": "/data/boundaries/study_area.geojson",
+      "category": "boundaries",
+      "format": "GEOJSON",
+      "fileSizeBytes": 1199,
+      "lastModified": "2026-11-15T05:36:47.777Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 1,
+      "bbox": [
+        89.8,
+        25.4,
+        95.4,
+        27.8
+      ],
+      "observationDate": null,
+      "satellite": null,
+      "polarization": null,
+      "coverage": "Brahmaputra Floodplain, Assam",
+      "description": null,
+      "disclaimer": "Reference study area boundary for NASA Space Apps 2026 - Dancing with the SARs",
+      "propertyKeys": [
+        "id",
+        "name",
+        "area_km2",
+        "terrain",
+        "elevation_range_m"
+      ]
+    },
+    {
+      "id": "villages",
+      "filename": "villages.geojson",
+      "path": "/data/boundaries/villages.geojson",
+      "category": "boundaries",
+      "format": "GEOJSON",
+      "fileSizeBytes": 5546,
+      "lastModified": "2026-11-15T05:37:06.314Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 16,
+      "bbox": [
+        90.024,
+        26.082,
+        94.885,
+        27.712
+      ],
+      "observationDate": null,
+      "satellite": null,
+      "polarization": null,
+      "coverage": "Assam Floodplain",
+      "description": null,
+      "disclaimer": "Reference settlement point locations for exposure analysis",
+      "propertyKeys": [
+        "id",
+        "name",
+        "district",
+        "population",
+        "elevation_m",
+        "primary_livelihood"
+      ]
+    },
+    {
+      "id": "permanent_water_mask",
+      "filename": "permanent_water_mask.geojson",
+      "path": "/data/permanent-water/permanent_water_mask.geojson",
+      "category": "permanentWater",
+      "format": "GEOJSON",
+      "fileSizeBytes": 2989,
+      "lastModified": "2026-11-15T05:37:39.463Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 5,
+      "bbox": [
+        89.85,
+        26.02,
+        94.4,
+        27.14
+      ],
+      "observationDate": null,
+      "satellite": null,
+      "polarization": null,
+      "coverage": "Assam, India",
+      "description": null,
+      "disclaimer": "Reference permanent water body mask for distinguishing regular river channels and water bodies from episodic floodwater",
+      "propertyKeys": [
+        "id",
+        "name",
+        "area_km2",
+        "type",
+        "mean_width_km"
+      ]
+    },
+    {
+      "id": "cropland_exposure",
+      "filename": "cropland_exposure.geojson",
+      "path": "/data/agriculture/cropland_exposure.geojson",
+      "category": "agriculture",
+      "format": "GEOJSON",
+      "fileSizeBytes": 2909,
+      "lastModified": "2026-11-15T05:38:07.180Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "featureCount": 4,
+      "bbox": [
+        90.8,
+        26.15,
+        94.4,
+        27.42
+      ],
+      "observationDate": null,
+      "satellite": null,
+      "polarization": null,
+      "coverage": "Assam, India",
+      "description": null,
+      "disclaimer": "Reference agricultural land-use dataset for crop exposure and food security analysis",
+      "propertyKeys": [
+        "id",
+        "district",
+        "zone",
+        "cropland_area_km2",
+        "primary_crops",
+        "growth_stage",
+        "soil_type"
+      ]
+    },
+    {
+      "id": "daily_rainfall_timeseries",
+      "filename": "daily_rainfall_timeseries.csv",
+      "path": "/data/reference-data/daily_rainfall_timeseries.csv",
+      "category": "referenceData",
+      "format": "CSV",
+      "fileSizeBytes": 1032,
+      "lastModified": "2026-11-15T05:38:12.362Z",
+      "status": "INDEXED",
+      "metadata": {},
+      "rowCount": 21,
+      "columns": [
+        "date",
+        "station",
+        "precipitation_mm",
+        "cumulative_july_mm",
+        "anomaly_percent",
+        "alert_level"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "type": "FeatureCollection",
+  "name": "NISAR_Flood_Extent_20240708",
+  "properties": {
+    "observation_id": "NISAR_L2_20240708T053412",
+    "satellite": "NISAR",
+    "sensor": "Synthetic Aperture Radar (L-band)",
+    "acquisition_date": "2024-07-08",
+    "acquisition_time": "05:34:12 UTC",
+    "pass_direction": "Ascending",
+    "polarization": ["VV", "VH"],
+    "incidence_angle_deg": 37.4,
+    "resolution_m": 12.0,
+    "processing_level": "Level-2 Classified Surface Water",
+    "study_area": "Brahmaputra Floodplain, Assam",
+    "method": "Bitemporal SAR Backscatter Ratio & Otsu Adaptive Thresholding with Permanent Water Mask Subtraction",
+    "classification_confidence": 0.94,
+    "disclaimer": "Reference NISAR L2 classified flood extent dataset for NASA Space Apps 2026"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-MOR-01",
+        "district": "Morigaon",
+        "severity": "CRITICAL",
+        "flooded_area_km2": 428.7,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -22.4,
+        "classification": "Open Surface Floodwater",
+        "depth_est_m": "1.5 - 3.2"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [92.12, 26.18],
+            [92.52, 26.15],
+            [92.62, 26.38],
+            [92.38, 26.48],
+            [92.14, 26.35],
+            [92.12, 26.18]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-BAR-01",
+        "district": "Barpeta",
+        "severity": "CRITICAL",
+        "flooded_area_km2": 521.3,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -23.1,
+        "classification": "Open Surface Floodwater",
+        "depth_est_m": "1.8 - 4.0"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [90.78, 26.18],
+            [91.32, 26.22],
+            [91.35, 26.54],
+            [90.88, 26.58],
+            [90.75, 26.32],
+            [90.78, 26.18]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-NAG-01",
+        "district": "Nagaon",
+        "severity": "HIGH",
+        "flooded_area_km2": 614.2,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -21.8,
+        "classification": "Open Water & Flooded Cropland",
+        "depth_est_m": "1.2 - 2.8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [92.48, 26.12],
+            [93.05, 26.15],
+            [93.08, 26.52],
+            [92.58, 26.54],
+            [92.45, 26.30],
+            [92.48, 26.12]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-LAK-01",
+        "district": "Lakhimpur",
+        "severity": "HIGH",
+        "flooded_area_km2": 445.8,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -22.0,
+        "classification": "Open Surface Floodwater",
+        "depth_est_m": "1.4 - 3.5"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [93.88, 27.08],
+            [94.42, 27.05],
+            [94.45, 27.48],
+            [93.92, 27.45],
+            [93.88, 27.08]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-DHE-01",
+        "district": "Dhemaji",
+        "severity": "HIGH",
+        "flooded_area_km2": 389.1,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -21.5,
+        "classification": "Open Surface Floodwater",
+        "depth_est_m": "1.0 - 2.5"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [94.28, 27.28],
+            [94.92, 27.32],
+            [94.88, 27.72],
+            [94.22, 27.68],
+            [94.28, 27.28]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-DHU-01",
+        "district": "Dhubri",
+        "severity": "HIGH",
+        "flooded_area_km2": 334.2,
+        "flood_type": "Episodic Inundation",
+        "mean_backscatter_db": -22.7,
+        "classification": "Open Surface Floodwater",
+        "depth_est_m": "1.5 - 3.8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [89.82, 25.98],
+            [90.32, 26.02],
+            [90.35, 26.32],
+            [89.85, 26.28],
+            [89.82, 25.98]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-MAJ-01",
+        "district": "Majuli",
+        "severity": "CRITICAL",
+        "flooded_area_km2": 87.6,
+        "flood_type": "Island Perimeter Overtopping",
+        "mean_backscatter_db": -23.5,
+        "classification": "Open Water & Siltation",
+        "depth_est_m": "1.2 - 2.9"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [94.02, 26.88],
+            [94.32, 26.90],
+            [94.35, 27.10],
+            [93.98, 27.05],
+            [94.02, 26.88]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "FLD-KAM-01",
+        "district": "Kamrup Rural",
+        "severity": "MODERATE",
+        "flooded_area_km2": 267.4,
+        "flood_type": "Backwater Inundation",
+        "mean_backscatter_db": -20.6,
+        "classification": "Partial Cropland Flood",
+        "depth_est_m": "0.8 - 1.8"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [91.38, 26.12],
+            [91.82, 26.15],
+            [91.85, 26.38],
+            [91.42, 26.35],
+            [91.38, 26.12]
+          ]
+        ]
+      }
+    }
+  ]
+}
