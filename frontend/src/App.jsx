@@ -7,6 +7,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { LocationProvider } from './context/LocationContext';
 
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
+const MapPage = lazy(() => import('./pages/Map/MapPage'));
 const ImpactAnalysis = lazy(() => import('./pages/ImpactAnalysis/ImpactAnalysis'));
 const Observations = lazy(() => import('./pages/Observations/Observations'));
 const Method = lazy(() => import('./pages/Method/Method'));
@@ -41,16 +42,16 @@ export default function App() {
     <LocationProvider>
       <BrowserRouter>
         <Routes>
-          {/* 5 Core Analyst Views */}
+          {/* Core Analyst Views */}
           <Route path="/" element={<AppShell><Dashboard /></AppShell>} />
+          <Route path="/map" element={<AppShell><MapPage /></AppShell>} />
           <Route path="/impact" element={<AppShell><ImpactAnalysis /></AppShell>} />
           <Route path="/observations" element={<AppShell><Observations /></AppShell>} />
           <Route path="/method" element={<AppShell><Method /></AppShell>} />
           <Route path="/export" element={<AppShell><Export /></AppShell>} />
 
           {/* Clean Aliases & Backward Compatibility Redirects */}
-          <Route path="/map" element={<Navigate to="/" replace />} />
-          <Route path="/compare" element={<Navigate to="/" replace />} />
+          <Route path="/compare" element={<Navigate to="/map" replace />} />
           <Route path="/satellite" element={<Navigate to="/observations" replace />} />
           <Route path="/about" element={<Navigate to="/method" replace />} />
           <Route path="/sources" element={<Navigate to="/method" replace />} />

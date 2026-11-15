@@ -1,9 +1,10 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Map, BarChart2, Satellite, BookOpen, Download } from 'lucide-react';
+import { LayoutDashboard, Map, BarChart2, Satellite, BookOpen, Download } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { label: 'Map', icon: Map, path: '/' },
+  { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+  { label: 'Map', icon: Map, path: '/map' },
   { label: 'Impact', icon: BarChart2, path: '/impact' },
   { label: 'Observations', icon: Satellite, path: '/observations' },
   { label: 'Method', icon: BookOpen, path: '/method' },
@@ -32,7 +33,7 @@ export default function Sidebar() {
       <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1)', width: '100%', alignItems: 'center' }}>
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.path || (item.path === '/' && location.pathname === '/map');
+          const isActive = location.pathname === item.path;
 
           return (
             <Link

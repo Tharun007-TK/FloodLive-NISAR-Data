@@ -68,6 +68,9 @@ export default function FloodMap({
   center = [26.35, 92.45],
   zoom = 9
 }) {
+  // Theme detection
+  const isDark = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+
   // Base map provider selection (OpenStreetMap & Esri)
   let baseMapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   let baseMapAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
